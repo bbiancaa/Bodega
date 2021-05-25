@@ -16,12 +16,12 @@ public class Bodega {
 
     ArrayList<Bebida> bebida = new ArrayList<Bebida>();
     ArrayList<Clientes> cachaceiros = new ArrayList<Clientes>();
-    File bebidas = new File("C:\\Users\\bianca\\Desktop\\Bodega\\arquivobebida.txt");
-    File clientes = new File("C:\\Users\\bianca\\Desktop\\Bodega\\arquivoclientes.txt");
+    File bebidas = new File("/home/bianca/Desktop/Bodega/arquivobebida.db");
+    File clientes = new File("/home/bianca/Desktop/Bodega/arquivoclientes.db");
     boolean verify = true;
     try {
-      FileInputStream file = new FileInputStream(bebidas);
-      ObjectInputStream test = new ObjectInputStream(file);
+
+      ObjectInputStream test = new ObjectInputStream(new FileInputStream(bebidas));
       while (verify) {
         Bebida b = (Bebida) test.readObject();
         if (b != null) {
@@ -31,7 +31,6 @@ public class Bodega {
           verify = false;
         }
       }
-      file.close();
       test.close();
     } catch (FileNotFoundException e) {
       System.out.println("Arquivo não encontrado/não existe");
@@ -57,6 +56,7 @@ public class Bodega {
       test.close();
     } catch (FileNotFoundException e) {
       System.out.println("Arquivo não encontrado");
+      e.printStackTrace();
     } catch (IOException e) {
       System.out.println("Erro ao inicializar stream");
     } catch (ClassNotFoundException e) {
@@ -64,72 +64,86 @@ public class Bodega {
     }
     int x;
     do {
-      System.out.println("Digite a opção desejeada: \n");
-      System.out.println("1 - Cadastrar bebida ");
-      System.out.println("2 - Mostrar bebidas ");
-      System.out.println("3 - Comprar bebida ");
-      System.out.println("4 - Vender bebida ");
-      System.out.println("5 - Cadastrar cliente ");
-      System.out.println("6 - Mostrar clientes ");
-      System.out.println("7 - Sair do sistema ");
+      clrscr();
+      System.out.println("|-------------------------------|");
+      System.out.println("|\tBodega do seu ze\t|");
+      System.out.println("|-------------------------------|");
+      System.out.println("|1 - Cadastrar bebida \t\t|");
+      System.out.println("|2 - Mostrar bebidas \t\t|");
+      System.out.println("|3 - Comprar bebida \t\t|");
+      System.out.println("|4 - Vender bebida \t\t|");
+      System.out.println("|5 - Cadastrar cliente \t\t|");
+      System.out.println("|6 - Mostrar clientes \t\t|");
+      System.out.println("|7 - Sair do sistema \t\t|");
+      System.out.println("|-------------------------------|");
 
+      System.out.print("|Digite a opcao desejada: ");
       x = scan.nextInt();
 
       switch (x) {
         case 1:
-          bebida.add(beb.cadastraBebida());
+        clrscr();
+          bebida.add(beb.cadastraBebida(bebida.size()));
           break;
         case 2:
+          clrscr();
           beb.mostraBebida(bebida);
           break;
         case 3:
+        clrscr();
           beb.compraBebida(bebida);
           break;
         case 4:
+        clrscr();
           beb.vendeBebida(bebida);
           break;
         case 5:
+        clrscr();
           cachaceiros.add(client.cadastraCliente());
         case 6:
+        clrscr();
           client.mostraCliente(cachaceiros);
           break;
         case 7:
+        clrscr();
           break;
-          try {
-            FileOutputStream arq = new FileOutputStream(bebidas);
-            ObjectOutputStream o = new ObjectOutputStream(arq);
-
-            for (int i = 0; i < bebida.size(); i++){
-                o.writeObject(bebida.get(i));
-            }
-            o.close();
-            arq.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Arquivo não existe");
-        } catch (IOException e) {
-            System.out.println("Erro ao inicializar stream");
-        } 
       }
-       
-        try {
-            FileOutputStream arq = new FileOutputStream(clientes);
-            ObjectOutputStream o = new ObjectOutputStream(arq);
+      try {
+        FileOutputStream arq = new FileOutputStream(bebidas);
+        ObjectOutputStream o = new ObjectOutputStream(arq);
 
-            for (int i = 0; i < cachaceiros.size(); i++){
-                o.writeObject(cachaceiros.get(i));
-            }
-            o.close();
-            arq.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Arquivo não existe");
-        } catch (IOException e) {
-            System.out.println("Erro ao inicializar stream");
-        } 
+        for (int i = 0; i < bebida.size(); i++) {
+          o.writeObject(bebida.get(i));
+        }
+        o.close();
+        arq.close();
+      } catch (FileNotFoundException e) {
+        System.out.println("Arquivo não existe");
+      } catch (IOException e) {
+        System.out.println("Erro ao inicializar stream");
+      }
 
-        System.exit(0);
-    }
+      try {
+        FileOutputStream arq = new FileOutputStream(clientes);
+        ObjectOutputStream o = new ObjectOutputStream(arq);
 
+        for (int i = 0; i < cachaceiros.size(); i++) {
+          o.writeObject(cachaceiros.get(i));
+        }
+        o.close();
+        arq.close();
+      } catch (FileNotFoundException e) {
+        System.out.println("Arquivo não existe");
+      } catch (IOException e) {
+        System.out.println("Erro ao inicializar stream");
+      }
 
-    } while (x != 0);
+    } while (x != 7);
+  }
+
+  public static void clrscr() {
+    // Clears Screen in java
+    System.out.print("\033[H\033[2J");
+    System.out.flush();
   }
 }
